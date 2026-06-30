@@ -75,7 +75,7 @@ All timestamps are **Unix epoch milliseconds** (int64). Money stored as **intege
 | status | varchar(20) | `success` / `failed` |
 | metadata | json | all keys from request `metadata` + `latitude`, `longitude`, `quantity` |
 | failure_reason | varchar(500) nullable | set when status=failed |
-| request_id | varchar(255), **UNIQUE** | `"pay_" + Idempotency-Key` — payment correlation + idempotency token |
+| request_id | varchar(255), **UNIQUE** | `"Idempotency-Key` — idempotency token |
 | created_at | bigint | epoch ms |
 
 **No separate `idempotency_keys` table.** Idempotency is enforced via the UNIQUE index on `orders.request_id`. A duplicate `Idempotency-Key` resolves to the existing order in the lookup path.
