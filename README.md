@@ -25,7 +25,7 @@ POST /v1/orders (Idempotency-Key header required)
 ```
 
 - **No oversell:** MySQL `SELECT ... FOR UPDATE` row lock serializes concurrent orders for same product. Holds across horizontally-scaled app instances.
-- **Idempotency:** `Idempotency-Key` header stored as `orders.request_id = "pay_" + key` with a UNIQUE index. Replay returns original order, no double-charge. No separate `idempotency_keys` table.
+- **Idempotency:** `Idempotency-Key` header stored as `orders.request_id` with a UNIQUE index. Replay returns original order, no double-charge.
 - **Payment failure:** order created as `failed` with `failure_reason`, stock NOT consumed (TX rollback, failed order persisted outside TX so client sees the reason).
 - **Order ID:** 14-character hex string (e.g. `a1b2c3d4e5f607`), generated via crypto/rand — short and URL-safe.
 
