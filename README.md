@@ -33,6 +33,11 @@ POST /v1/orders (Idempotency-Key header required)
 
 https://docs.google.com/document/d/1G28VMi17I8pSVN8Zspumdaku0b38dFeo/edit
 
+### Excalidraw Design Discussed
+
+<img width="6385" height="8063" alt="Untitled-2026-06-30-0943 excalidraw (1)" src="https://github.com/user-attachments/assets/c18e988c-0a75-40ed-b6f0-df31e176e61c" />
+
+
 ### Tables
 
 All timestamps are **Unix epoch milliseconds** (int64). Money stored as **integer paise** (no floats).
