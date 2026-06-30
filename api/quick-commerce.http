@@ -1,0 +1,92 @@
+### Quick Commerce API Flow
+### Run in order: Search -> Get Product -> Place Order -> Replay (idempotency)
+
+@baseUrl = http://localhost:8080
+
+### 1. Search Products
+GET {{baseUrl}}/v1/products?product_name=Lays
+Content-Type: application/json
+
+###
+
+### 2. Get Product By ID
+GET {{baseUrl}}/v1/products/prod-001
+Content-Type: application/json
+
+###
+
+### 3. Place Order (Buy Now)
+POST {{baseUrl}}/v1/orders
+Content-Type: application/json
+Idempotency-Key: order-test-001
+
+{
+    "user_id": "user-001",
+    "product_id": "prod-001",
+    "quantity": 1,
+    "amount": 2000,
+    "metadata": "123 Main St, Bangalore",
+    "latitude": "12.9716",
+    "longitude": "77.5946"
+}
+
+###
+
+### 4. Replay Same Order (Idempotency Test - should return same order)
+POST {{baseUrl}}/v1/orders
+Content-Type: application/json
+Idempotency-Key: order-test-001
+
+{
+    "user_id": "user-001",
+    "product_id": "prod-001",
+    "quantity": 1,
+    "amount": 2000,
+    "metadata": "123 Main St, Bangalore",
+    "latitude": "12.9716",
+    "longitude": "77.5946"
+}
+
+###
+
+### 5. Out of Stock Test (order large quantity)
+POST {{baseUrl}}/v1/orders
+Content-Type: application/json
+Idempotency-Key: order-test-oos-001
+
+{
+    "user_id": "user-001",
+    "product_id": "prod-001",
+    "quantity": 9999,
+    "amount": 19998000,
+    "metadata": "Test address",
+    "latitude": "12.97",
+    "longitude": "77.59"
+}
+
+###
+
+### 6. Missing Idempotency Key (should 400)
+POST {{baseUrl}}/v1/orders
+Content-Type: application/json
+
+{
+    "user_id": "user-001",
+    "product_id": "prod-001",
+    "quantity": 1,
+    "amount": 2000
+}
+
+###
+
+### 7. Inactive User (should fail)
+POST {{baseUrl}}/v1/orders
+Content-Type: application/json
+Idempotency-Key: order-test-inactive-001
+
+{
+    "user_id": "user-003",
+    "product_id": "prod-001",
+    "quantity": 1,
+    "amount": 2000
+}

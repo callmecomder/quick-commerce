@@ -1,0 +1,89 @@
+{
+  "info": {
+    "name": "Quick Commerce",
+    "description": "Quick Commerce API — Product Search & Orders",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "idempotencyKey", "value": "order-postman-001" }
+  ],
+  "item": [
+    {
+      "name": "1. Search Products",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v1/products?product_name=Lays",
+          "host": ["{{baseUrl}}"],
+          "path": ["v1", "products"],
+          "query": [{ "key": "product_name", "value": "Lays" }]
+        }
+      }
+    },
+    {
+      "name": "2. Get Product By ID",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/v1/products/prod-001", "host": ["{{baseUrl}}"], "path": ["v1", "products", "prod-001"] }
+      }
+    },
+    {
+      "name": "3. Place Order",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "{{baseUrl}}/v1/orders", "host": ["{{baseUrl}}"], "path": ["v1", "orders"] },
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Idempotency-Key", "value": "{{idempotencyKey}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user-001\",\n  \"product_id\": \"prod-001\",\n  \"quantity\": 1,\n  \"amount\": 2000,\n  \"metadata\": \"123 Main St, Bangalore\",\n  \"latitude\": \"12.9716\",\n  \"longitude\": \"77.5946\"\n}"
+        }
+      }
+    },
+    {
+      "name": "4. Replay Same Order (Idempotency)",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "{{baseUrl}}/v1/orders", "host": ["{{baseUrl}}"], "path": ["v1", "orders"] },
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Idempotency-Key", "value": "{{idempotencyKey}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user-001\",\n  \"product_id\": \"prod-001\",\n  \"quantity\": 1,\n  \"amount\": 2000,\n  \"metadata\": \"123 Main St, Bangalore\",\n  \"latitude\": \"12.9716\",\n  \"longitude\": \"77.5946\"\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Out of Stock",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "{{baseUrl}}/v1/orders", "host": ["{{baseUrl}}"], "path": ["v1", "orders"] },
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Idempotency-Key", "value": "order-oos-001" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user-001\",\n  \"product_id\": \"prod-001\",\n  \"quantity\": 9999,\n  \"amount\": 19998000\n}"
+        }
+      }
+    },
+    {
+      "name": "6. Missing Idempotency Key (400)",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "{{baseUrl}}/v1/orders", "host": ["{{baseUrl}}"], "path": ["v1", "orders"] },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user-001\",\n  \"product_id\": \"prod-001\",\n  \"quantity\": 1,\n  \"amount\": 2000\n}"
+        }
+      }
+    }
+  ]
+}
