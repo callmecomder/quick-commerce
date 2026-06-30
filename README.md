@@ -259,7 +259,7 @@ All of the following must be present and non-empty (else HTTP 400):
 4. **Payment failure returns HTTP 200** — with `status: "failed"` and `failure_reason` in body, so client sees the reason. Not a 5xx.
 5. **Timestamps as epoch milliseconds** — not SQL datetime; all `created_at`/`updated_at` are `int64` Unix millis.
 6. **Order ID is 14-char hex** — short, URL-safe, generated via `crypto/rand`. Not UUID.
-7. **No separate `idempotency_keys` table** — `Idempotency-Key` header is stored as `orders.request_id = "pay_" + key` (UNIQUE indexed). Single source of truth; replay path = lookup-by-request_id.
+7. **No separate `idempotency_keys` table** — `Idempotency-Key` header is stored as `orders.request_id` (UNIQUE indexed). Single source of truth; replay path = lookup-by-request_id.
 8. **All order fields mandatory** — `user_id`, `product_id`, `quantity`, `amount`, `latitude`, `longitude`, `metadata.address` are all required.
 9. **`metadata` is a key-value map** — `map[string]string`, must contain `address`. Extra keys are persisted.
 
