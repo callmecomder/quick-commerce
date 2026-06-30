@@ -29,6 +29,10 @@ POST /v1/orders (Idempotency-Key header required)
 - **Payment failure:** order created as `failed` with `failure_reason`, stock NOT consumed (TX rollback, failed order persisted outside TX so client sees the reason).
 - **Order ID:** 14-character hex string (e.g. `a1b2c3d4e5f607`), generated via crypto/rand — short and URL-safe.
 
+### Test Case Document
+
+https://docs.google.com/document/d/1G28VMi17I8pSVN8Zspumdaku0b38dFeo/edit
+
 ### Tables
 
 All timestamps are **Unix epoch milliseconds** (int64). Money stored as **integer paise** (no floats).
